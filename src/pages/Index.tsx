@@ -17,8 +17,11 @@ const Index = () => {
       {/* Top Branding */}
       <div className="absolute top-0 left-0 right-0 z-10 p-8">
         <h1 className="text-4xl md:text-6xl font-bold text-center anime-title">
-          Prodüksiyon Endüstrisi Anime Kızı
+          AKÜS
         </h1>
+        <p className="text-xl md:text-2xl text-center text-muted-foreground mt-2">
+          Anime Kızı Üretim Sanayi
+        </p>
       </div>
 
       {/* Main Content */}
@@ -62,8 +65,11 @@ const Index = () => {
       {/* Bottom Branding */}
       <div className="absolute bottom-0 left-0 right-0 z-10 p-8">
         <h2 className="text-3xl md:text-5xl font-bold text-center anime-title">
-          Prodüksiyon Endüstrisi Anime Kızı
+          AKÜS
         </h2>
+        <p className="text-lg md:text-xl text-center text-muted-foreground">
+          Anime Kızı Üretim Sanayi
+        </p>
       </div>
 
       {/* Modals */}

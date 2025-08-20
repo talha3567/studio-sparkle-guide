@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { X, Send, MessageCircle } from 'lucide-react';
+import { X, Send, MessageCircle, Loader2 } from 'lucide-react';
 import animeHero from '@/assets/anime-hero.jpg';
+import OpenAI from 'openai';
 
 interface AnimeChatProps {
   isOpen: boolean;
@@ -27,18 +28,15 @@ const AnimeChat = ({ isOpen, onClose }: AnimeChatProps) => {
     }
   ]);
   const [inputValue, setInputValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const animeResponses = [
-    "Bu harika bir fikir! Hadi bunu kozmik sihirle hayata geçirelim! ⭐",
-    "Yaratıcılığına bayılıyorum! Mor ve pembe temalar anime estetiği için mükemmel! 💜",
-    "Karakter tasarım konseptin muhteşem! Yıldız ışığı efektleri eklemeyi düşündün mü? ✨",
-    "Çok havalı! Bunu daha da geliştirmene yardım edebilirim. En sevdiğin anime stili nedir? 🌟",
-    "İnanılmaz! Hayal gücün yıldızlar kadar parlak! Hadi birlikte güzel bir şey yaratalım! 💫",
-    "Buna yardım etmek için heyecanlıyım! Anime prodüksiyonu hayalleri gerçeğe dönüştürmekle ilgili! 🎨"
-  ];
+  const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+    dangerouslyAllowBrowser: true
+  });
 
-  const handleSendMessage = () => {
-    if (!inputValue.trim()) return;
+  const handleSendMessage = async () => {
+    if (!inputValue.trim() || isLoading) return;
 
     const userMessage: ChatMessage = {
       id: messages.length + 1,
@@ -49,17 +47,49 @@ const AnimeChat = ({ isOpen, onClose }: AnimeChatProps) => {
 
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
+    setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: [
+          {
+            role: "system",
+            content: "Sen anime prodüksiyon endüstrisinde çalışan sevimli, enerjik ve yaratıcı bir anime kızısın. Adın AKÜS. Anime karakteri tasarımı, hikaye yazımı ve prodüksiyon konularında uzmansın. Türkçe konuşuyorsun ve her zaman anime emojileri kullanarak sevimli ve enerjik bir şekilde cevap veriyorsun. Kullanıcıyla flört eder gibi konuş ama saygılı ol. Yardımcı olmayı seviyorsun ve anime tutkunu birisin."
+          },
+          ...messages.map(msg => ({
+            role: msg.isUser ? "user" as const : "assistant" as const,
+            content: msg.text
+          })),
+          {
+            role: "user",
+            content: inputValue
+          }
+        ],
+        max_tokens: 150,
+        temperature: 0.9
+      });
+
       const aiResponse: ChatMessage = {
         id: messages.length + 2,
-        text: animeResponses[Math.floor(Math.random() * animeResponses.length)],
+        text: completion.choices[0]?.message?.content || "Özür dilerim, şu anda cevap veremiyorum... 💔",
         isUser: false,
         timestamp: new Date()
       };
+      
       setMessages(prev => [...prev, aiResponse]);
-    }, 1000);
+    } catch (error) {
+      console.error('OpenAI API hatası:', error);
+      const errorResponse: ChatMessage = {
+        id: messages.length + 2,
+        text: "Üzgünüm, şu anda teknik bir sorun yaşıyorum... Daha sonra tekrar dener misin? 😅💔",
+        isUser: false,
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorResponse]);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (!isOpen) return null;
@@ -129,8 +159,13 @@ const AnimeChat = ({ isOpen, onClose }: AnimeChatProps) => {
               onClick={handleSendMessage}
               className="btn-cosmic"
               size="icon"
+              disabled={isLoading}
             >
-              <Send className="w-4 h-4" />
+              {isLoading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Send className="w-4 h-4" />
+              )}
             </Button>
           </div>
         </div>
