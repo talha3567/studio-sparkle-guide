@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { X, Send, MessageCircle, Loader2 } from 'lucide-react';
+import { X, Send, MessageCircle, Loader2, Key } from 'lucide-react';
 import animeHero from '@/assets/anime-hero.jpg';
 import OpenAI from 'openai';
 
@@ -29,14 +29,23 @@ const AnimeChat = ({ isOpen, onClose }: AnimeChatProps) => {
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [apiKey, setApiKey] = useState(localStorage.getItem('openai_api_key') || '');
+  const [showApiKeyInput, setShowApiKeyInput] = useState(!apiKey);
 
-  const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
+  const openai = apiKey ? new OpenAI({
+    apiKey: apiKey,
     dangerouslyAllowBrowser: true
-  });
+  }) : null;
+
+  const handleSaveApiKey = () => {
+    if (apiKey.trim()) {
+      localStorage.setItem('openai_api_key', apiKey);
+      setShowApiKeyInput(false);
+    }
+  };
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim() || isLoading) return;
+    if (!inputValue.trim() || isLoading || !openai) return;
 
     const userMessage: ChatMessage = {
       id: messages.length + 1,
@@ -98,24 +107,63 @@ const AnimeChat = ({ isOpen, onClose }: AnimeChatProps) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
       <Card className="w-full max-w-4xl h-[80vh] bg-gradient-card border-anime-purple cosmic-glow flex flex-col">
         <div className="p-6 border-b border-anime-purple/30">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-anime-purple shadow-glow">
-                <img 
-                  src={animeHero} 
-                  alt="Anime Asistanı" 
-                  className="w-full h-full object-cover"
-                />
+          {showApiKeyInput ? (
+            <div className="space-y-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 rounded-full bg-anime-purple/20 border-2 border-anime-purple flex items-center justify-center">
+                  <Key className="w-6 h-6 text-anime-purple" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold anime-title">API Key Gerekli</h2>
+                  <p className="text-sm text-muted-foreground">OpenAI API anahtarınızı girin</p>
+                </div>
               </div>
-              <div>
-                <h2 className="text-2xl font-bold anime-title">Flört Modu</h2>
-                <p className="text-sm text-muted-foreground">Anime Prodüksiyon Asistanı</p>
+              <div className="flex space-x-2">
+                <Input
+                  type="password"
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                  placeholder="sk-..."
+                  className="flex-1 bg-input border-anime-purple/30 focus:border-anime-purple"
+                />
+                <Button onClick={handleSaveApiKey} className="btn-cosmic">
+                  Kaydet
+                </Button>
+                <Button variant="ghost" size="icon" onClick={onClose}>
+                  <X className="w-6 h-6" />
+                </Button>
               </div>
             </div>
-            <Button variant="ghost" size="icon" onClick={onClose}>
-              <X className="w-6 h-6" />
-            </Button>
-          </div>
+          ) : (
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-anime-purple shadow-glow">
+                  <img 
+                    src={animeHero} 
+                    alt="Anime Asistanı" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-bold anime-title">Flört Modu</h2>
+                  <p className="text-sm text-muted-foreground">Anime Prodüksiyon Asistanı</p>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => setShowApiKeyInput(true)}
+                  className="text-xs"
+                >
+                  API Key
+                </Button>
+                <Button variant="ghost" size="icon" onClick={onClose}>
+                  <X className="w-6 h-6" />
+                </Button>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
@@ -147,19 +195,25 @@ const AnimeChat = ({ isOpen, onClose }: AnimeChatProps) => {
         </div>
 
         <div className="p-6 border-t border-anime-purple/30">
-          <div className="flex space-x-2">
+          {showApiKeyInput ? (
+            <p className="text-sm text-muted-foreground text-center">
+              OpenAI API anahtarınızı girerek AI chat özelliğini aktif edebilirsiniz
+            </p>
+          ) : (
+            <div className="flex space-x-2">
             <Input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Anime prodüksiyonu hakkında sor..."
               className="flex-1 bg-input border-anime-purple/30 focus:border-anime-purple"
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+              disabled={!openai}
             />
             <Button
               onClick={handleSendMessage}
               className="btn-cosmic"
               size="icon"
-              disabled={isLoading}
+              disabled={isLoading || !openai}
             >
               {isLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -168,6 +222,7 @@ const AnimeChat = ({ isOpen, onClose }: AnimeChatProps) => {
               )}
             </Button>
           </div>
+          )}
         </div>
       </Card>
     </div>
