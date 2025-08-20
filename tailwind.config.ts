@@ -61,7 +61,25 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Anime theme colors
+				anime: {
+					purple: 'hsl(var(--anime-purple))',
+					'purple-dark': 'hsl(var(--anime-purple-dark))',
+					pink: 'hsl(var(--anime-pink))',
+					cyan: 'hsl(var(--anime-cyan))',
+					'star-glow': 'hsl(var(--star-glow))'
 				}
+			},
+			backgroundImage: {
+				'gradient-cosmic': 'var(--gradient-cosmic)',
+				'gradient-button': 'var(--gradient-button)',
+				'gradient-card': 'var(--gradient-card)'
+			},
+			boxShadow: {
+				'cosmic': 'var(--shadow-cosmic)',
+				'glow': 'var(--shadow-glow)',
+				'star': 'var(--shadow-star)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

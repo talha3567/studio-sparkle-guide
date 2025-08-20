@@ -1,12 +1,74 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { BookOpen, MessageCircle } from 'lucide-react';
+import StarField from '@/components/StarField';
+import AnimeGuide from '@/components/AnimeGuide';
+import AnimeChat from '@/components/AnimeChat';
+import animeHero from '@/assets/anime-hero.jpg';
 
 const Index = () => {
+  const [isGuideOpen, setIsGuideOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="min-h-screen relative overflow-hidden">
+      <StarField />
+      
+      {/* Top Branding */}
+      <div className="absolute top-0 left-0 right-0 z-10 p-8">
+        <h1 className="text-4xl md:text-6xl font-bold text-center anime-title">
+          Production Industry Anime Girl
+        </h1>
       </div>
+
+      {/* Main Content */}
+      <div className="min-h-screen flex items-center justify-center relative z-10">
+        <div className="text-center space-y-12 px-4">
+          {/* Hero Image */}
+          <div className="relative">
+            <div className="w-80 h-80 md:w-96 md:h-96 mx-auto rounded-3xl overflow-hidden border-4 border-anime-purple shadow-cosmic">
+              <img 
+                src={animeHero} 
+                alt="Anime Production Girl" 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="absolute -inset-4 bg-gradient-button opacity-20 rounded-3xl blur-xl -z-10"></div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <Button
+              variant="hero"
+              onClick={() => setIsGuideOpen(true)}
+              className="w-full sm:w-auto"
+            >
+              <BookOpen className="w-6 h-6 mr-2" />
+              Open Guide
+            </Button>
+            
+            <Button
+              variant="hero"
+              onClick={() => setIsChatOpen(true)}
+              className="w-full sm:w-auto"
+            >
+              <MessageCircle className="w-6 h-6 mr-2" />
+              Switch to Pick-Up Mode
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Branding */}
+      <div className="absolute bottom-0 left-0 right-0 z-10 p-8">
+        <h2 className="text-3xl md:text-5xl font-bold text-center anime-title">
+          Production Industry Anime Girl
+        </h2>
+      </div>
+
+      {/* Modals */}
+      <AnimeGuide isOpen={isGuideOpen} onClose={() => setIsGuideOpen(false)} />
+      <AnimeChat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
     </div>
   );
 };

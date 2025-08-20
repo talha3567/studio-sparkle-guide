@@ -2,41 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Anime Production Industry Design System - Purple Cosmic Theme */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Cosmic Purple Theme */
+    --background: 270 85% 8%;
+    --foreground: 280 30% 95%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 270 60% 12%;
+    --card-foreground: 280 25% 92%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 270 70% 10%;
+    --popover-foreground: 280 25% 95%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 280 85% 65%;
+    --primary-foreground: 270 15% 5%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 270 45% 20%;
+    --secondary-foreground: 280 25% 85%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 270 40% 15%;
+    --muted-foreground: 280 15% 70%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: 285 90% 70%;
+    --accent-foreground: 270 20% 8%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 75% 55%;
+    --destructive-foreground: 280 25% 95%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 270 35% 25%;
+    --input: 270 40% 18%;
+    --ring: 280 85% 65%;
 
-    --radius: 0.5rem;
+    /* Anime-specific colors */
+    --anime-purple: 270 85% 65%;
+    --anime-purple-dark: 270 75% 45%;
+    --anime-pink: 315 85% 75%;
+    --anime-cyan: 195 85% 75%;
+    --star-glow: 280 90% 85%;
+
+    /* Gradients */
+    --gradient-cosmic: linear-gradient(135deg, hsl(270 85% 8%), hsl(285 70% 15%), hsl(270 85% 8%));
+    --gradient-button: linear-gradient(135deg, hsl(280 85% 65%), hsl(285 90% 70%));
+    --gradient-card: linear-gradient(135deg, hsl(270 60% 12%), hsl(285 55% 18%));
+    
+    /* Shadows and effects */
+    --shadow-cosmic: 0 25px 50px -12px hsl(280 85% 25% / 0.8);
+    --shadow-glow: 0 0 30px hsl(280 90% 70% / 0.5);
+    --shadow-star: 0 0 15px hsl(280 90% 85% / 0.8);
+
+    --radius: 1rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -101,5 +117,67 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    background: var(--gradient-cosmic);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+}
+
+@layer components {
+  /* Star field animation */
+  .stars {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .star {
+    position: absolute;
+    background: hsl(var(--star-glow));
+    border-radius: 50%;
+    animation: twinkle 3s infinite ease-in-out;
+  }
+
+  .star:nth-child(odd) {
+    animation-delay: 1s;
+  }
+
+  .star:nth-child(3n) {
+    animation-delay: 2s;
+  }
+
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+
+  /* Cosmic glow effects */
+  .cosmic-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .anime-title {
+    background: var(--gradient-button);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 30px hsl(var(--anime-purple) / 0.5);
+  }
+
+  /* Button variants */
+  .btn-cosmic {
+    background: var(--gradient-button);
+    border: 2px solid hsl(var(--anime-purple));
+    box-shadow: var(--shadow-glow);
+    transition: all 0.3s ease;
+  }
+
+  .btn-cosmic:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow), 0 10px 25px hsl(var(--anime-purple) / 0.4);
   }
 }
