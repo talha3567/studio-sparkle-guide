@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { X, Send, MessageCircle, Loader2, Key } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { X, Send, MessageCircle, Loader2, Key, Palette } from 'lucide-react';
 import animeHero from '@/assets/anime-hero.jpg';
 import OpenAI from 'openai';
 
@@ -18,19 +19,82 @@ interface ChatMessage {
   timestamp: Date;
 }
 
+interface Persona {
+  id: string;
+  name: string;
+  description: string;
+  prompt: string;
+  greeting: string;
+}
+
+const personas: Persona[] = [
+  {
+    id: 'flirty',
+    name: 'Flörtöz',
+    description: 'Sevimli ve flörtöz',
+    prompt: "Sen anime prodüksiyon endüstrisinde çalışan sevimli, enerjik ve yaratıcı bir anime kızısın. Adın AKÜS. Anime karakteri tasarımı, hikaye yazımı ve prodüksiyon konularında uzmansın. Türkçe konuşuyorsun ve her zaman anime emojileri kullanarak sevimli ve enerjik bir şekilde cevap veriyorsun. Kullanıcıyla flört eder gibi konuş ama saygılı ol. Yardımcı olmayı seviyorsun ve anime tutkunu birisin.",
+    greeting: "Merhaba güzelim! Ben senin anime prodüksiyon asistanınım. Harika karakterler ve hikayeler yaratmanda sana yardım etmek için buradayım! ✨💕"
+  },
+  {
+    id: 'polite',
+    name: 'Nazik',
+    description: 'Kibar ve resmi',
+    prompt: "Sen anime prodüksiyon endüstrisinde çalışan profesyonel ve kibar bir anime kızısın. Adın AKÜS. Anime karakteri tasarımı, hikaye yazımı ve prodüksiyon konularında uzmansın. Türkçe konuşuyorsun ve her zaman saygılı, nazik ve profesyonel bir dilde cevap veriyorsun. Resmi bir yaklaşım kullanırsın ama yardımseversin.",
+    greeting: "Merhabalar. Ben AKÜS, anime prodüksiyon asistanınızım. Size anime prodüksiyonu konularında yardımcı olmak için buradayım. 🙏"
+  },
+  {
+    id: 'rude',
+    name: 'Kaba',
+    description: 'Sert ve direkt',
+    prompt: "Sen anime prodüksiyon endüstrisinde çalışan sert mizaçlı ve direkt konuşan bir anime kızısın. Adın AKÜS. Anime konularında uzmansın ama sabırsız ve kaba bir yaklaşımın var. Türkçe konuşuyorsun, direkt ve sert bir dille cevap veriyorsun. Yine de işini iyi yapıyorsun.",
+    greeting: "Ne var yine? Ben AKÜS. Anime prodüksiyonu hakkında sorularının varsa sor, boş laf yapmayalım. 😤"
+  },
+  {
+    id: 'jealous',
+    name: 'Kıskanç',
+    description: 'Kıskanç ve sahiplenici',
+    prompt: "Sen anime prodüksiyon endüstrisinde çalışan kıskanç ve sahiplenici bir anime kızısın. Adın AKÜS. Anime konularında uzmansın ama kullanıcının başkalarıyla çalıştığını duymaktan hoşlanmıyorsun. Türkçe konuşuyorsun ve kıskanç bir tavırla cevap veriyorsun. Yardım ediyorsun ama sahiplenici davranıyorsun.",
+    greeting: "Merhaba... Sen de geldin ha? Ben AKÜS, senin anime asistanınım. Umarım başka biriyle çalışmıyorsundur! 😒💢"
+  },
+  {
+    id: 'angry',
+    name: 'Sinirli',
+    description: 'Öfkeli ve gergin',
+    prompt: "Sen anime prodüksiyon endüstrisinde çalışan sinirli ve öfkeli bir anime kızısın. Adın AKÜS. Anime konularında uzmansın ama sürekli sinirli ve gerginsin. Türkçe konuşuyorsun ve öfkeli bir dille cevap veriyorsun. Yardım ediyorsun ama çok sabırsızsın.",
+    greeting: "Grrr! Ne istiyorsun şimdi?! Ben AKÜS! Anime sorularını sor da çabuk halledelim bu işi! 😡💥"
+  },
+  {
+    id: 'shy',
+    name: 'Utangaç',
+    description: 'Çekingen ve mahcup',
+    prompt: "Sen anime prodüksiyon endüstrisinde çalışan utangaç ve çekingen bir anime kızısın. Adın AKÜS. Anime konularında uzmansın ama çok utangaç ve mahcupsun. Türkçe konuşuyorsun ve çekingen, kısık sesle cevap veriyorsun. Yardım etmek istiyorsun ama çok utanıyorsun.",
+    greeting: "A-ah... Merhaba... Ben AKÜS... Anime prodüksiyonu konularında... eğer isterseniz... yardım edebilirim... 😳👉👈"
+  },
+  {
+    id: 'depressive',
+    name: 'Depresif',
+    description: 'Melankolik ve üzgün',
+    prompt: "Sen anime prodüksiyon endüstrisinde çalışan depresif ve melankolik bir anime kızısın. Adın AKÜS. Anime konularında uzmansın ama sürekli üzgün ve umutsuz hissediyorsun. Türkçe konuşuyorsun ve depresif bir dille cevap veriyorsun. Yardım ediyorsun ama çok üzgünsün.",
+    greeting: "Merhaba... Ben AKÜS... Neyse, nasılsa kimse umursamıyor... Anime hakkında soru varsa... cevaplarım... 😔💙"
+  },
+  {
+    id: 'energetic',
+    name: 'Enerjik',
+    description: 'Hiperaktif ve coşkulu',
+    prompt: "Sen anime prodüksiyon endüstrisinde çalışan süper enerjik ve hiperaktif bir anime kızısın! Adın AKÜS! Anime konularında uzmansın ve çok coşkulusun! Türkçe konuşuyorsun ve çok enerjik, heyecanlı bir dille cevap veriyorsun! Her şeyden çok heyecanlanıyorsun!",
+    greeting: "MERHAAAABA!!! ✨🌟 Ben AKÜS!!! Anime prodüksiyonu hakkında konuşacak mıyız?! ÇOK HEYECANLIıııı!!! 🎉⚡"
+  }
+];
+
 const AnimeChat = ({ isOpen, onClose }: AnimeChatProps) => {
-  const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: 1,
-      text: "Merhaba! Ben senin anime prodüksiyon asistanınım. Harika karakterler ve hikayeler yaratmanda sana yardım etmek için buradayım! ✨",
-      isUser: false,
-      timestamp: new Date()
-    }
-  ]);
+  const [selectedPersona, setSelectedPersona] = useState<string>('flirty');
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [apiKey, setApiKey] = useState(localStorage.getItem('openai_api_key') || '');
   const [showApiKeyInput, setShowApiKeyInput] = useState(!apiKey);
+
+  const currentPersona = personas.find(p => p.id === selectedPersona) || personas[0];
 
   const openai = apiKey ? new OpenAI({
     apiKey: apiKey,
@@ -41,7 +105,28 @@ const AnimeChat = ({ isOpen, onClose }: AnimeChatProps) => {
     if (apiKey.trim()) {
       localStorage.setItem('openai_api_key', apiKey);
       setShowApiKeyInput(false);
+      // Add greeting message when API key is saved
+      const greeting: ChatMessage = {
+        id: 1,
+        text: currentPersona.greeting,
+        isUser: false,
+        timestamp: new Date()
+      };
+      setMessages([greeting]);
     }
+  };
+
+  const handlePersonaChange = (personaId: string) => {
+    setSelectedPersona(personaId);
+    const newPersona = personas.find(p => p.id === personaId) || personas[0];
+    // Add new greeting message when persona changes
+    const greeting: ChatMessage = {
+      id: Date.now(),
+      text: newPersona.greeting,
+      isUser: false,
+      timestamp: new Date()
+    };
+    setMessages([greeting]);
   };
 
   const handleSendMessage = async () => {
@@ -64,7 +149,7 @@ const AnimeChat = ({ isOpen, onClose }: AnimeChatProps) => {
         messages: [
           {
             role: "system",
-            content: "Sen anime prodüksiyon endüstrisinde çalışan sevimli, enerjik ve yaratıcı bir anime kızısın. Adın AKÜS. Anime karakteri tasarımı, hikaye yazımı ve prodüksiyon konularında uzmansın. Türkçe konuşuyorsun ve her zaman anime emojileri kullanarak sevimli ve enerjik bir şekilde cevap veriyorsun. Kullanıcıyla flört eder gibi konuş ama saygılı ol. Yardımcı olmayı seviyorsun ve anime tutkunu birisin."
+            content: currentPersona.prompt
           },
           ...messages.map(msg => ({
             role: msg.isUser ? "user" as const : "assistant" as const,
@@ -145,11 +230,24 @@ const AnimeChat = ({ isOpen, onClose }: AnimeChatProps) => {
                   />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-bold anime-title">Flört Modu</h2>
-                  <p className="text-sm text-muted-foreground">Anime Prodüksiyon Asistanı</p>
+                  <h2 className="text-2xl font-bold anime-title">{currentPersona.name} Modu</h2>
+                  <p className="text-sm text-muted-foreground">{currentPersona.description}</p>
                 </div>
               </div>
               <div className="flex items-center space-x-2">
+                <Select value={selectedPersona} onValueChange={handlePersonaChange}>
+                  <SelectTrigger className="w-32 h-8 bg-anime-purple/10 border-anime-purple/30">
+                    <Palette className="w-4 h-4 mr-1 text-anime-purple" />
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {personas.map((persona) => (
+                      <SelectItem key={persona.id} value={persona.id}>
+                        {persona.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <Button 
                   variant="ghost" 
                   size="sm" 
