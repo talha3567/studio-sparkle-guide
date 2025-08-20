@@ -17,7 +17,7 @@ const Index = () => {
       {/* Top Branding */}
       <div className="absolute top-0 left-0 right-0 z-10 p-8">
         <h1 className="text-4xl md:text-6xl font-bold text-center anime-title">
-          Production Industry Anime Girl
+          Prodüksiyon Endüstrisi Anime Kızı
         </h1>
       </div>
 
@@ -29,7 +29,7 @@ const Index = () => {
             <div className="w-80 h-80 md:w-96 md:h-96 mx-auto rounded-3xl overflow-hidden border-4 border-anime-purple shadow-cosmic">
               <img 
                 src={animeHero} 
-                alt="Anime Production Girl" 
+                alt="Anime Prodüksiyon Kızı" 
                 className="w-full h-full object-cover"
               />
             </div>
@@ -44,7 +44,7 @@ const Index = () => {
               className="w-full sm:w-auto"
             >
               <BookOpen className="w-6 h-6 mr-2" />
-              Open Guide
+              Kılavuzu Aç
             </Button>
             
             <Button
@@ -53,7 +53,7 @@ const Index = () => {
               className="w-full sm:w-auto"
             >
               <MessageCircle className="w-6 h-6 mr-2" />
-              Switch to Pick-Up Mode
+              Flört Moduna Geç
             </Button>
           </div>
         </div>
@@ -62,7 +62,7 @@ const Index = () => {
       {/* Bottom Branding */}
       <div className="absolute bottom-0 left-0 right-0 z-10 p-8">
         <h2 className="text-3xl md:text-5xl font-bold text-center anime-title">
-          Production Industry Anime Girl
+          Prodüksiyon Endüstrisi Anime Kızı
         </h2>
       </div>
 

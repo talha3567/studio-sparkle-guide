@@ -21,7 +21,7 @@ const AnimeChat = ({ isOpen, onClose }: AnimeChatProps) => {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 1,
-      text: "Hello! I'm your anime production assistant. I'm here to help you create amazing characters and stories! ✨",
+      text: "Merhaba! Ben senin anime prodüksiyon asistanınım. Harika karakterler ve hikayeler yaratmanda sana yardım etmek için buradayım! ✨",
       isUser: false,
       timestamp: new Date()
     }
@@ -29,12 +29,12 @@ const AnimeChat = ({ isOpen, onClose }: AnimeChatProps) => {
   const [inputValue, setInputValue] = useState('');
 
   const animeResponses = [
-    "That sounds like a wonderful idea! Let's bring it to life with some cosmic magic! ⭐",
-    "I love your creativity! Purple and pink themes are perfect for anime aesthetics! 💜",
-    "Your character design concept is amazing! Have you thought about adding some starlight effects? ✨",
-    "That's so cool! I can help you develop that further. What's your favorite anime style? 🌟",
-    "Incredible! Your imagination is as bright as the stars! Let's create something beautiful together! 💫",
-    "I'm excited to help you with that! Anime production is all about bringing dreams to reality! 🎨"
+    "Bu harika bir fikir! Hadi bunu kozmik sihirle hayata geçirelim! ⭐",
+    "Yaratıcılığına bayılıyorum! Mor ve pembe temalar anime estetiği için mükemmel! 💜",
+    "Karakter tasarım konseptin muhteşem! Yıldız ışığı efektleri eklemeyi düşündün mü? ✨",
+    "Çok havalı! Bunu daha da geliştirmene yardım edebilirim. En sevdiğin anime stili nedir? 🌟",
+    "İnanılmaz! Hayal gücün yıldızlar kadar parlak! Hadi birlikte güzel bir şey yaratalım! 💫",
+    "Buna yardım etmek için heyecanlıyım! Anime prodüksiyonu hayalleri gerçeğe dönüştürmekle ilgili! 🎨"
   ];
 
   const handleSendMessage = () => {
@@ -73,13 +73,13 @@ const AnimeChat = ({ isOpen, onClose }: AnimeChatProps) => {
               <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-anime-purple shadow-glow">
                 <img 
                   src={animeHero} 
-                  alt="Anime Assistant" 
+                  alt="Anime Asistanı" 
                   className="w-full h-full object-cover"
                 />
               </div>
               <div>
-                <h2 className="text-2xl font-bold anime-title">Pick-Up Mode</h2>
-                <p className="text-sm text-muted-foreground">Anime Production Assistant</p>
+                <h2 className="text-2xl font-bold anime-title">Flört Modu</h2>
+                <p className="text-sm text-muted-foreground">Anime Prodüksiyon Asistanı</p>
               </div>
             </div>
             <Button variant="ghost" size="icon" onClick={onClose}>
@@ -104,7 +104,7 @@ const AnimeChat = ({ isOpen, onClose }: AnimeChatProps) => {
                 {!message.isUser && (
                   <div className="flex items-center space-x-2 mb-1">
                     <MessageCircle className="w-4 h-4 text-anime-pink" />
-                    <span className="text-xs font-medium text-anime-pink">Assistant</span>
+                    <span className="text-xs font-medium text-anime-pink">Asistan</span>
                   </div>
                 )}
                 <p className="text-sm">{message.text}</p>
@@ -121,7 +121,7 @@ const AnimeChat = ({ isOpen, onClose }: AnimeChatProps) => {
             <Input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Ask about anime production..."
+              placeholder="Anime prodüksiyonu hakkında sor..."
               className="flex-1 bg-input border-anime-purple/30 focus:border-anime-purple"
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
             />

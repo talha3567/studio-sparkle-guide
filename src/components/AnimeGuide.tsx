@@ -13,23 +13,23 @@ const AnimeGuide = ({ isOpen, onClose }: AnimeGuideProps) => {
 
   const guideSteps = [
     {
-      title: "Character Design Basics",
-      content: "Start with basic shapes and proportions. Anime characters typically have large eyes, smaller noses, and expressive features.",
+      title: "Karakter Tasarımı Temelleri",
+      content: "Temel şekillerle ve oranlarla başlayın. Anime karakterleri genellikle büyük gözlere, küçük burunlara ve etkileyici özelliklere sahiptir.",
       icon: <Star className="w-6 h-6" />
     },
     {
-      title: "Color Palette",
-      content: "Choose a cohesive color scheme. Purple and pink tones work well for cosmic themes, with cyan accents for contrast.",
+      title: "Renk Paleti",
+      content: "Uyumlu bir renk şeması seçin. Mor ve pembe tonlar kozmik temalar için iyi çalışır, kontrast için camgöbeği vurgular kullanın.",
       icon: <Heart className="w-6 h-6" />
     },
     {
-      title: "Lighting & Effects",
-      content: "Add ethereal glow effects, star particles, and atmospheric lighting to create that cosmic anime aesthetic.",
+      title: "Işıklandırma ve Efektler",
+      content: "O kozmik anime estetiğini yaratmak için ruhani parıltı efektleri, yıldız parçacıkları ve atmosferik ışıklandırma ekleyin.",
       icon: <Sparkles className="w-6 h-6" />
     },
     {
-      title: "Final Polish",
-      content: "Add details like flowing hair, cosmic backgrounds, and special effects to bring your anime girl to life.",
+      title: "Son Rötuşlar",
+      content: "Anime kızınızı hayata geçirmek için akan saçlar, kozmik arka planlar ve özel efektler gibi detaylar ekleyin.",
       icon: <Star className="w-6 h-6" />
     }
   ];
@@ -41,7 +41,7 @@ const AnimeGuide = ({ isOpen, onClose }: AnimeGuideProps) => {
       <Card className="w-full max-w-2xl bg-gradient-card border-anime-purple cosmic-glow">
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold anime-title">Anime Production Guide</h2>
+            <h2 className="text-2xl font-bold anime-title">Anime Prodüksiyon Kılavuzu</h2>
             <Button variant="ghost" size="icon" onClick={onClose}>
               <X className="w-6 h-6" />
             </Button>
@@ -84,7 +84,7 @@ const AnimeGuide = ({ isOpen, onClose }: AnimeGuideProps) => {
                 onClick={() => setCurrentStep(Math.max(0, currentStep - 1))}
                 disabled={currentStep === 0}
               >
-                Previous
+                Önceki
               </Button>
               
               <Button
@@ -97,7 +97,7 @@ const AnimeGuide = ({ isOpen, onClose }: AnimeGuideProps) => {
                   }
                 }}
               >
-                {currentStep === guideSteps.length - 1 ? 'Complete' : 'Next'}
+                {currentStep === guideSteps.length - 1 ? 'Tamamla' : 'Sonraki'}
               </Button>
             </div>
           </div>
