@@ -4,6 +4,7 @@ import { BookOpen, MessageCircle } from 'lucide-react';
 import StarField from '@/components/StarField';
 import AnimeGuide from '@/components/AnimeGuide';
 import AnimeChat from '@/components/AnimeChat';
+import DiscordButton from '@/components/DiscordButton';
 import animeHero from '@/assets/anime-hero.jpg';
 
 const Index = () => {
@@ -75,6 +76,9 @@ const Index = () => {
       {/* Modals */}
       <AnimeGuide isOpen={isGuideOpen} onClose={() => setIsGuideOpen(false)} />
       <AnimeChat isOpen={isChatOpen} onClose={() => setIsChatOpen(false)} />
+      
+      {/* Discord Button */}
+      <DiscordButton />
     </div>
   );
 };
