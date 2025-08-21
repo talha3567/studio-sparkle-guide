@@ -22,10 +22,10 @@ const buttonVariants = cva(
         hero: "bg-gradient-button text-primary-foreground border-2 border-anime-purple shadow-cosmic text-lg px-8 py-6 rounded-2xl hover:shadow-glow hover:-translate-y-1 transition-all duration-300",
       },
       size: {
-        default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-md px-3",
-        lg: "h-11 rounded-md px-8",
-        icon: "h-10 w-10",
+        default: "h-10 px-4 py-2 min-h-[44px] min-w-[44px]",
+        sm: "h-9 rounded-md px-3 min-h-[40px] min-w-[40px]",
+        lg: "h-11 rounded-md px-8 min-h-[48px] min-w-[48px]",
+        icon: "h-10 w-10 min-h-[44px] min-w-[44px]",
       },
     },
     defaultVariants: {
