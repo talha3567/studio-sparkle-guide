@@ -2,8 +2,15 @@ import { MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const DiscordButton = () => {
-  const handleDiscordClick = () => {
-    window.open('https://discord.gg/aUSFygHRdh', '_blank');
+  const handleDiscordClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      window.open('https://discord.gg/aUSFygHRdh', '_blank', 'noopener,noreferrer');
+    } catch (error) {
+      // Fallback for blocked popups
+      window.location.href = 'https://discord.gg/aUSFygHRdh';
+    }
   };
 
   return (
